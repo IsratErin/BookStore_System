@@ -3,6 +3,7 @@ import {
   addToCart,
   calculateTotal,
   processPayment,
+  updateInventory,
 } from "./bookstore.js";
 import { books } from "./data.js";
 
@@ -30,7 +31,7 @@ test("total price with tax for all items in the cart matches", () => {
   ];
 
   expect(calculateTotal()).toEqual(0);
-  expect(calculateTotal(cart)).toEqual(44 * 0.1);
+  expect(calculateTotal(cart)).toEqual(44 * 1.1);
 });
 
 test("payment processed successfully with total cart price", () => {
@@ -42,4 +43,10 @@ test("payment processed successfully with total cart price", () => {
     success: true,
     transactionId: "id",
   });
+});
+
+test("invetory uppdates according to cart items quantity", () => {
+  const cart = [{ item: books[1], quantity: 2 }];
+  expect(updateInventory(cart)).toEqual(true);
+  expect(updateInventory([])).toEqual(false);
 });

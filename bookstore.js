@@ -1,4 +1,4 @@
-import { books } from "./data";
+import { books } from "./data.js";
 const searchBooks = (query) => {
   // Returns array of book objects matching search
   // Books should have: id, title, author, price, stock
@@ -35,6 +35,7 @@ const addToCart = (bookId, quantity) => {
     cartItem.quantity = quantity;
     cart.push(cartItem);
   }
+  console.log(cart);
   return cart;
 };
 
@@ -48,7 +49,7 @@ const calculateTotal = (cart) => {
     //console.log(cartItem);
     return total + cartItem.item.price * cartItem.quantity;
   }, 0);
-  const totalPriceWithTax = totalPrice * 0.1;
+  const totalPriceWithTax = totalPrice * 1.1;
   return totalPriceWithTax;
 };
 
@@ -65,6 +66,23 @@ const processPayment = (cartTotal, paymentMethod) => {
 const updateInventory = (cart) => {
   // Reduces stock for all books in cart
   // Throws error if any book is out of stock
+  if (!cart) {
+    return false;
+  }
+  if (cart.length == 0) {
+    return false;
+  }
+
+  cart.forEach((cartItem) => {
+    const book = books.find((book) => cartItem.item.id == book.id);
+    if (book.stock < cartItem.item.quantity) {
+      throw new Error("Book is already out of stock");
+    }
+    book.stock = book.stock - cartItem.item.quantity;
+  });
+  console.log("Inventory updated");
+
+  return true;
 };
 
 // MAIN INTEGRATION FUNCTION
@@ -72,12 +90,27 @@ const updateInventory = (cart) => {
 const completePurchase = (searchQuery, bookId, quantity, paymentMethod) => {
   // TODO: Integrate all functions above
   // 1. Search for books
+  const booksFounded = searchBooks(searchQuery);
+  console.log("Books Founded: ");
+  console.log(booksFounded);
   // 2. Add to cart
+  const cart = addToCart(bookId, quantity);
+  console.log("Current Cart: ");
+  console.log(cart);
   // 3. Calculate total
+  const totalPayment = calculateTotal(cart);
+  console.log("total to pay: " + totalPayment);
   // 4. Process payment
+  const paymentResult = processPayment(totalPayment, paymentMethod);
+  console.log("Payment status: ");
+  console.log(paymentResult);
   // 5. Update inventory
+  updateInventory(cart);
   // 6. Return order confirmation
+  console.log("Order completed!");
 };
+
+completePurchase("Jane Austen", 5, 1, "credit card");
 
 export {
   searchBooks,
