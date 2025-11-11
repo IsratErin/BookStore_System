@@ -6,7 +6,7 @@ const books = [
     id: 2,
     title: "To Kill a Mockingbird",
     author: "Harper Lee",
-    price: 12.1,
+    price: 12,
     stock: 3,
   },
   {
@@ -20,7 +20,7 @@ const books = [
     id: 4,
     title: "The Catcher in the Rye",
     author: "J.D. Salinger",
-    price: 12.1,
+    price: 12,
     stock: 2,
   },
   {
