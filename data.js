@@ -1,7 +1,7 @@
 // Books should have: id, title, author, price, stock
 
 const books = [
-  { id: 1, title: "1984", author: "George Orwell", price: 15.0, stock: 50 },
+  { id: 1, title: "1984", author: "George Orwell", price: 15.0, stock: 500 },
   {
     id: 2,
     title: "To Kill a Mockingbird",

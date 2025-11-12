@@ -29,13 +29,18 @@ const addToCart = (bookId, quantity) => {
   }
   let cart = [];
   let cartItem = { item: null, quantity: 0 };
-  const bookToAdd = books.find((book) => book.id === bookId);
-  if (bookToAdd) {
-    cartItem.item = bookToAdd;
+  const bookToAdd = books.find((book) => book.id == bookId);
+  console.log("booktoadd stock " + bookToAdd.stock);
+  console.log(bookToAdd);
+  if (bookToAdd.stock > quantity) {
+    //cartItem.item = bookToAdd;
+    cartItem.item = { ...bookToAdd };
     cartItem.quantity = quantity;
     cart.push(cartItem);
+    console.log("added to cart");
   }
-  console.log(cart);
+
+  //console.log(cart);
   return cart;
 };
 
@@ -74,11 +79,11 @@ const updateInventory = (cart) => {
   }
 
   cart.forEach((cartItem) => {
-    const book = books.find((book) => cartItem.item.id == book.id);
-    if (book.stock < cartItem.item.quantity) {
+    const book = books.find((book) => book.id == cartItem.item.id);
+    if (!book || book.stock < cartItem.quantity) {
       throw new Error("Book is already out of stock");
     }
-    book.stock = book.stock - cartItem.item.quantity;
+    book.stock -= cartItem.quantity;
   });
   console.log("Inventory updated");
 
@@ -92,23 +97,23 @@ const completePurchase = (searchQuery, bookId, quantity, paymentMethod) => {
   // 1. Search for books
   const booksFounded = searchBooks(searchQuery);
   console.log("Books Founded: ");
-  console.log(booksFounded);
+  //console.log(booksFounded);
   // 2. Add to cart
   const cart = addToCart(bookId, quantity);
-  console.log("Current Cart: ");
+  console.log("Current Cart with book id : " + bookId);
   console.log(cart);
   // 3. Calculate total
   const totalPayment = calculateTotal(cart);
-  console.log("total to pay: " + totalPayment);
+  //console.log("total to pay: " + totalPayment);
   // 4. Process payment
   const paymentResult = processPayment(totalPayment, paymentMethod);
-  console.log("Payment status: ");
-  console.log(paymentResult);
+  //console.log("Payment status: ");
+  //console.log(paymentResult);
   // 5. Update inventory
   updateInventory(cart);
   // 6. Return order confirmation
   console.log("Order completed!");
-  return true;
+  return paymentResult.success;
 };
 
 //completePurchase("Jane Austen", 5, 1, "credit card");
