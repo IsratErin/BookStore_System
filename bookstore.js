@@ -108,9 +108,10 @@ const completePurchase = (searchQuery, bookId, quantity, paymentMethod) => {
   updateInventory(cart);
   // 6. Return order confirmation
   console.log("Order completed!");
+  return true;
 };
 
-completePurchase("Jane Austen", 5, 1, "credit card");
+//completePurchase("Jane Austen", 5, 1, "credit card");
 
 export {
   searchBooks,
