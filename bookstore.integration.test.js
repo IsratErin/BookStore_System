@@ -20,7 +20,7 @@ describe("Bookstore Integration Tests", () => {
       console.log(cart);
       const totalPayment = calculateTotal(cart);
       const paymentResult = processPayment(totalPayment, "credit card");
-      updateInventory(cart);
+      updateInventory(cart, paymentResult);
 
       const results = paymentResult.success;
       expect(results).toBe(true);
@@ -34,7 +34,7 @@ describe("Bookstore Integration Tests", () => {
       //console.log(cart);
       const totalPayment = calculateTotal(cart);
       const paymentResult = processPayment(totalPayment, "credit card");
-      updateInventory(cart);
+      updateInventory(cart, paymentResult);
       const results = paymentResult.success;
       expect(results).toBe(true);
     });
@@ -45,7 +45,7 @@ describe("Bookstore Integration Tests", () => {
       //console.log(cart);
       const totalPayment = calculateTotal(cart);
       const paymentResult = processPayment(totalPayment, "credit card");
-      updateInventory(cart);
+      updateInventory(cart, paymentResult);
       const results = paymentResult.success;
       expect(results).toBe(true);
     });
@@ -71,10 +71,29 @@ describe("Bookstore Integration Tests", () => {
 
     test("should handle payment failure gracefully", () => {
       // TODO: Test when payment processing fails
+      const cartwithBook1 = addToCart(1, 1);
+      const cartwithBook5 = addToCart(5, 2);
+      const cart = [...cartwithBook1, ...cartwithBook5];
+      const totalPayment = calculateTotal(cart);
+      const paymentResult = processPayment(totalPayment, null);
+      const results = paymentResult.success;
+      expect(results).toBe(false);
     });
 
     test("should not update inventory if payment fails", () => {
       // TODO: Important business logic test!
+      const book = searchBooks(5);
+      const initialStock = book[0].stock;
+      const cart = addToCart(5, 100);
+      const totalPayment = calculateTotal(cart);
+      const paymentResult = processPayment(totalPayment, null); // null triggers failure
+      expect(paymentResult.success).toBe(false);
+      updateInventory(cart, paymentResult);
+      const finalStock = searchBooks(5)[0].stock;
+      console.log("stock check:");
+      console.log("Initial: " + initialStock);
+      console.log("Final: " + finalStock);
+      expect(finalStock).toBe(initialStock);
     });
   });
 });

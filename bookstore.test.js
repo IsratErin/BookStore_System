@@ -47,6 +47,7 @@ test("payment processed successfully with total cart price", () => {
 
 test("invetory uppdates according to cart items quantity", () => {
   const cart = [{ item: books[1], quantity: 2 }];
-  expect(updateInventory(cart)).toEqual(true);
-  expect(updateInventory([])).toEqual(false);
+  const paymentResult = { success: true, transactionId: "id" };
+  expect(updateInventory(cart, paymentResult)).toEqual(true);
+  expect(updateInventory([], paymentResult)).toEqual(false);
 });

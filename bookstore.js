@@ -68,13 +68,13 @@ const processPayment = (cartTotal, paymentMethod) => {
   return { success: true, transactionId: transactionId };
 };
 
-const updateInventory = (cart) => {
+const updateInventory = (cart, paymentResult) => {
   // Reduces stock for all books in cart
   // Throws error if any book is out of stock
-  if (!cart) {
+  if (!cart || cart.length == 0) {
     return false;
   }
-  if (cart.length == 0) {
+  if (!paymentResult.success) {
     return false;
   }
 
@@ -110,7 +110,7 @@ const completePurchase = (searchQuery, bookId, quantity, paymentMethod) => {
   //console.log("Payment status: ");
   //console.log(paymentResult);
   // 5. Update inventory
-  updateInventory(cart);
+  updateInventory(cart, paymentResult);
   // 6. Return order confirmation
   console.log("Order completed!");
   return paymentResult.success;
